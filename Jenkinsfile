@@ -1,5 +1,8 @@
 pipeline {
-    agent { docker { image 'maven:3.9.6-eclipse-temurin-17-alpine' } }
+    agent any
+    tools {
+        maven 'Maven-3.9.6'   // Manage Jenkins > Tools 에서 등록한 Maven 이름
+    }
     stages {
         stage('build') {
             steps {
