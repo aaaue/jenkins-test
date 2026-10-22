@@ -10,7 +10,7 @@ pipeline {
         TOMCAT_SVC   = 'tomcat'           // 실제 서비스 이름으로 수정
         APP_NAME     = 'myapp'
         BACKUP_DIR   = '/var/lib/jenkins/backup'
-        HEALTH_URL   = 'http://localhost:8080/myapp/health'
+        HEALTH_URL   = 'http://localhost:8080/myapp/health.txt'
     }
 
     options {
@@ -22,7 +22,7 @@ pipeline {
     stages {
         stage('Build & Test') {
             steps {
-                sh 'chmod +x mvnw && ./mvnw -B clean package'
+                sh 'mvn -B clean package'
             }
             post {
                 always { junit allowEmptyResults: true, testResults: 'target/surefire-reports/*.xml' }
