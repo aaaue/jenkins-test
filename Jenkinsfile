@@ -33,31 +33,31 @@ pipeline {
             steps { archiveArtifacts artifacts: "target/${APP_NAME}.war", fingerprint: true }
         }
 
-        // stage('Deploy to DEV') {
-        //     when { branch 'main' }
-        //     steps {
-        //         sh '''
-        //           set -e
-        //           mkdir -p "$BACKUP_DIR"
-        //           TS=$(date +%Y%m%d_%H%M%S)
-        //           cp -p "$TOMCAT_HOME/webapps/$APP_NAME.war" "$BACKUP_DIR/$APP_NAME.war.$TS" || true
-        //           sudo systemctl stop "$TOMCAT_SVC"
-        //           rm -rf "$TOMCAT_HOME/webapps/$APP_NAME" "$TOMCAT_HOME/webapps/$APP_NAME.war"
-        //           cp "target/$APP_NAME.war" "$TOMCAT_HOME/webapps/"
-        //           sudo systemctl start "$TOMCAT_SVC"
-        //         '''
-        //     }
-        // }
+        stage('Deploy to DEV') {
+            when { branch 'main' }
+            steps {
+                sh '''
+                  set -e
+                  mkdir -p "$BACKUP_DIR"
+                  TS=$(date +%Y%m%d_%H%M%S)
+                  cp -p "$TOMCAT_HOME/webapps/$APP_NAME.war" "$BACKUP_DIR/$APP_NAME.war.$TS" || true
+                  sudo systemctl stop "$TOMCAT_SVC"
+                  rm -rf "$TOMCAT_HOME/webapps/$APP_NAME" "$TOMCAT_HOME/webapps/$APP_NAME.war"
+                  cp "target/$APP_NAME.war" "$TOMCAT_HOME/webapps/"
+                  sudo systemctl start "$TOMCAT_SVC"
+                '''
+            }
+        }
 
-        // stage('Health Check') {
-        //     when { branch 'main' }
-        //     steps {
-        //         retry(10) {
-        //             sleep 10
-        //             sh 'curl -fsS -o /dev/null "$HEALTH_URL"'
-        //         }
-        //     }
-        // }
+        stage('Health Check') {
+            when { branch 'main' }
+            steps {
+                retry(10) {
+                    sleep 10
+                    sh 'curl -fsS -o /dev/null "$HEALTH_URL"'
+                }
+            }
+        }
     }
 
     post {
