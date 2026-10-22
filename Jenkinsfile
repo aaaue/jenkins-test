@@ -9,5 +9,10 @@ pipeline {
                 sh 'mvn --version'
             }
         }
+        stage('hello'){
+            steps{
+                echo 'Hello World!'
+            }
+        }
     }
 }
